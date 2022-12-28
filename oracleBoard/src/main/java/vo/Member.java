@@ -1,42 +1,44 @@
 package vo;
 
 public class Member {
-	private String MemberId;
-	private String MemberPw;
-	private String MemberName;
-	private String Createdate;
-	private String Updatedate;
+	private String memberId;
+	private String memberPw;
+	private String memberName;
+	private String createdate;
+	private String updatedate;
 	
 	public String getMemberId() {
-		return MemberId;
+		return memberId;
 	}
 	public void setMemberId(String memberId) {
-		MemberId = memberId;
+		this.memberId = memberId;
 	}
 	public String getMemberPw() {
-		return MemberPw;
+		return memberPw;
 	}
 	public void setMemberPw(String memberPw) {
-		MemberPw = memberPw;
+		this.memberPw = memberPw;
 	}
 	public String getMemberName() {
-		return MemberName;
+		return memberName;
 	}
 	public void setMemberName(String memberName) {
-		MemberName = memberName;
+		this.memberName = memberName;
 	}
 	public String getCreatedate() {
-		return Createdate;
+		return createdate;
 	}
 	public void setCreatedate(String createdate) {
-		Createdate = createdate;
+		this.createdate = createdate;
 	}
 	public String getUpdatedate() {
-		return Updatedate;
+		return updatedate;
 	}
 	public void setUpdatedate(String updatedate) {
-		Updatedate = updatedate;
+		this.updatedate = updatedate;
 	}
+	
+	
 	
 	
 }
