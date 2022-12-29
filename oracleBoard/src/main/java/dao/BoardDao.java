@@ -9,22 +9,21 @@ import vo.Board;
 
 public class BoardDao {
 	// 검색 추가
-	public ArrayList<Board> selectBoardListByPage(Connection conn, int beginRow, int endRow) throws Exception {
+	public ArrayList<Board> selectBoardListByPage(Connection conn, int beginRow, int endRow, String serachtitle) throws Exception {
 		ArrayList<Board> list = new ArrayList<Board>();
-		String sql = "SELECT board_no boardNo, board_title boardTilte, createdate"
-				+ " FROM (SELECT rownum rnum, board_no, board_title, createdate"
-				+ "			FROM (SELECT board_no, board_title, createdate"
-				+ "					FROM board ORDER BY board_no DESC))"
-				+ " WHERE rnum BETWEEN ? AND ?"; // WHERE rnum >=? AND rnum <=?;
+		String sql = "SELECT board_no boardNo, board_title boardTitle, createdate FROM (SELECT rownum rnum, board_no, board_title, createdate FROM (SELECT board_no, board_title, createdate FROM board WHERE board_title LIKE ? ORDER BY TO_NUMBER(board_no) DESC)) WHERE rnum BETWEEN ? AND ?"; // WHERE rnum >=? AND rnum <=?;
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setInt(1, beginRow);
-		stmt.setInt(2, endRow);
+		stmt.setString(1, "%"+serachtitle+"%");
+		stmt.setInt(2, beginRow);
+		stmt.setInt(3, endRow);
+		
 		ResultSet rs = stmt.executeQuery();
 		while(rs.next()) {
 			Board b = new Board();
 			b.setBoardNo(rs.getInt("boardNo"));
 			b.setBoardTitle(rs.getString("boardTitle"));
 			b.setCreatedate(rs.getString("createdate"));
+			
 			list.add(b);
 		}
 		rs.close();
@@ -32,21 +31,19 @@ public class BoardDao {
 		return list;
 	}
 	
-	public int insertBoard(Connection conn, Board board) throws Exception {
+	public int insertBoard(Connection conn, Board b) throws Exception {
 		int result= 0;
-		String sql="INSERT INTO BOARD( board_no, board_title, board_content, member_id, updatedate, createdate "
-				+ ") values( board_seq.nextval, ?, ?, ?, sysdate, sysdate );";
+		String sql="INSERT INTO board ( BOARD_NO, BOARD_TITLE, BOARD_CONTENT, MEMBER_ID, UPDATEDATE, CREATEDATE ) values ( board_seq.nextval, ?, ?, ?, sysdate, sysdate )";
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setString(1, board.getBoardTitle());
-		stmt.setString(2, board.getBoardContent());
-		stmt.setString(3, board.getMemberId());
-		
+		stmt.setString(1, b.getBoardTitle());
+		stmt.setString(2, b.getBoardContent());
+		stmt.setString(3, b.getMemberId());
 		result=stmt.executeUpdate();
 		stmt.close();
 		
 		return result;
 	}
-	public Board boardOneVlaues(Connection conn, int boardNo) throws Exception {
+	public Board boardOneValues(Connection conn, int boardNo) throws Exception {
 		Board board=  new Board();
 		String sql ="SELECT * FROM board WHERE board_no= ?";
 		PreparedStatement stmt= conn.prepareStatement(sql);
@@ -54,6 +51,7 @@ public class BoardDao {
 		ResultSet rs = stmt.executeQuery();
 		
 		if(rs.next()) {
+			board.setBoardNo(rs.getInt("board_no"));
 			board.setBoardTitle(rs.getString("board_title"));
 			board.setBoardContent(rs.getString("board_content"));
 			board.setMemberId(rs.getString("member_id"));
@@ -66,11 +64,11 @@ public class BoardDao {
 	public int updateBoardMatchId(Connection conn, Board b) throws Exception {
 		int result= 0;
 		
-		String sql = "UPDATE BOARD SET board_title= ?, board_content= ?, updatedate= systdate ";
+		String sql = "UPDATE BOARD SET board_title= ?, board_content= ?, updatedate= sysdate WHERE board_no=?";
 		PreparedStatement stmt= conn.prepareStatement(sql);
 		stmt.setString(1, b.getBoardTitle());
 		stmt.setString(2, b.getBoardContent());
-		
+		stmt.setInt(3, b.getBoardNo());
 		result= stmt.executeUpdate();
 		
 		stmt.close();
@@ -102,6 +100,25 @@ public class BoardDao {
 		stmt.close();
 		
 		return result;
+	}
+	public int countBoard(Connection conn, int rowPerPage, String serachtitle) throws Exception{
+		
+		int count=0;
+		String sql = "SELECT COUNT(*) FROM board WHERE WHERE board_title LIKE ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, "%"+serachtitle+"%");
+		
+		ResultSet rs= stmt.executeQuery();
+		if(rs.next()) {
+			count=rs.getInt("count(*)");
+		}
+		int lastPage= count/rowPerPage;
+		if(count%rowPerPage!=0) {
+			lastPage+=1;
+		}
+		
+		return lastPage;
+		
 	}
 	public ArrayList<Board> selectBoardByMember(Connection conn, String memberId) throws Exception{
 		ArrayList<Board> list = new ArrayList<Board>();

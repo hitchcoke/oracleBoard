@@ -36,12 +36,19 @@ public class BoardListController extends HttpServlet {
 			rowPerPage = Integer.parseInt(request.getParameter("rowPerPage"));
 		}
 		
+		String searchtitle= "";
+		if(request.getParameter("searchtitle") != null) {
+			searchtitle = request.getParameter("searchtitle");
+		}
+		
+
 		this.boardService = new BoardService();
-		ArrayList<Board> list = boardService.getBoardListByPage(currentPage, rowPerPage);
-		request.setAttribute("boardList", list);
+		int lastPage=boardService.countBoard(rowPerPage, searchtitle);
+		ArrayList<Board> list = boardService.getBoardListByPage(currentPage, rowPerPage, searchtitle);
+		request.setAttribute("list", list);
 		request.setAttribute("currentPage", currentPage); // view에서 필요
 		request.setAttribute("rowPerPage", rowPerPage); // view에서 필요
-		
+		request.setAttribute("lastPage", lastPage);
 		request.getRequestDispatcher("/WEB-INF/view/board/boardList.jsp").forward(request, response);
 	}
 }

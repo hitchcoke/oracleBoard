@@ -42,6 +42,7 @@ public class AddBoardController extends HttpServlet {
 			return;
 		}
 		
+		
 		this.boardService= new BoardService();
 		String boardtitle= request.getParameter("boardTitle");
 		String boardcontent= request.getParameter("boardContent");
@@ -50,6 +51,9 @@ public class AddBoardController extends HttpServlet {
 		b.setBoardContent(boardcontent);
 		b.setBoardTitle(boardtitle);
 		b.setMemberId(loginMember.getMemberId());	
+		System.out.print(b.getBoardTitle());
+		System.out.print(b.getBoardContent());
+		System.out.println(b.getMemberId());
 		
 		int result = boardService.insertBoard(b);
 		

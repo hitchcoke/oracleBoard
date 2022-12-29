@@ -12,19 +12,21 @@ public class BoardService {
 	private BoardDao boardDao;
 
 	
-	public ArrayList<Board> getBoardListByPage(int currentPage, int rowPerPage) {
+	public ArrayList<Board> getBoardListByPage(int currentPage, int rowPerPage, String serachtitle) {
 		/*
 		 	1) connection 생성 <- DBUtil.class
 		 	2) beginRow, endRow 생성 <- currentPage,rowPerPage를 가공
 		 */
 		ArrayList<Board> list = null;
 		Connection conn = null;
+	
 		try {
 			conn = DBUtil.getConnection();
 			int beginRow = (currentPage-1)*rowPerPage+1;
 			int endRow = beginRow + rowPerPage - 1;
 			boardDao = new BoardDao();
-			list = boardDao.selectBoardListByPage(conn, beginRow, endRow);
+			list = boardDao.selectBoardListByPage(conn, beginRow, endRow, serachtitle);
+		
 			conn.commit(); // DBUtil.class에서 conn.setAutoCommit(false);
 		} catch (Exception e) {
 			try {
@@ -41,6 +43,32 @@ public class BoardService {
 			}
 		}
 		return list;
+	}
+	public int countBoard(int rowPerPage, String serachtitle) {
+		int lastPage=0;
+		Connection conn= null;
+		
+		try {
+			conn=DBUtil.getConnection();
+			boardDao= new BoardDao();
+			lastPage=boardDao.countBoard(conn, rowPerPage, serachtitle);
+			
+		}catch(Exception e) {
+			try {
+				conn.rollback();
+				
+			}catch(Exception e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}finally{
+			try {
+				conn.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return lastPage;
 	}
 	
 	public int insertBoard(Board board) {
@@ -78,7 +106,7 @@ public class BoardService {
 		try {
 			conn=DBUtil.getConnection();
 			boardDao=new BoardDao();
-			b= boardDao.boardOneVlaues(conn, boardNo);
+			b= boardDao.boardOneValues(conn, boardNo);
 			
 			conn.commit();
 		}catch(Exception e) {

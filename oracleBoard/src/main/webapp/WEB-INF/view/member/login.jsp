@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-   
+   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,9 +19,22 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap/loginCss/css/bootstrap.min.css">
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!-- Style -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap/loginCss/css/style.css">
+    <script>
+	  $(document).ready(function() {
+	  	$('#pw').blur(function){
+	  		if ($('#id').val().length<1||$('#pw').val().length<1){
+	  			$('#msgs').text("올바르게 채워주세요");
+	  			$('#id').focus();
+	  		}
+	  		
+	  	})
+	  }
+	  	
+  </script>
+ 
 </head>
 <body>
 	<div class="content">
@@ -40,12 +53,12 @@
             <form action="${pageContext.request.contextPath}/LoginController" method="post">
               <div class="form-group first">
                 <label for="username">아이디 </label>
-                <input type="text" class="form-control" name="memberId">
+                <input type="text" class="form-control" id="id" name="memberId">
               </div>
              
               <div class="form-group last mb-4">
                 <label for="password">비밀번호 </label>
-                <input type="password" class="form-control" name="memberPw">
+                <input type="password" class="form-control" id="pw" name="memberPw">
                 
               </div>
                 <a href="${pageContext.request.contextPath}/AddMemberController">회원가입 </a>
@@ -53,13 +66,19 @@
             </form>
             </div>
           </div>
+          <span id = "msgs" class="msgs"></span>
           
         </div>
         
       </div>
     </div>
   </div>
-  
+  <c:if test="${msg==1}">
+  	<script>
+  		alert("아이디 비밀번호를 확인해주세요")
+  	</script>
+  </c:if>
+
  
 	
 	<script src="${pageContext.request.contextPath}/bootstrap/loginCss/js/jquery-3.3.1.min.js"></script>

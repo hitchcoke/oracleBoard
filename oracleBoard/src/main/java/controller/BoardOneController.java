@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import service.BoardService;
+import service.RecommentService;
 import vo.Board;
 import vo.Member;
+import vo.Recomment;
 
 /**
  * Servlet implementation class BoardOneController
@@ -19,6 +22,7 @@ import vo.Member;
 @WebServlet("/BoardOneController")
 public class BoardOneController extends HttpServlet {
 	private BoardService boardService;
+	private RecommentService reDao;
 	//board 상세보기
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//수정 삭제
@@ -30,8 +34,10 @@ public class BoardOneController extends HttpServlet {
 			response.sendRedirect(request.getContextPath()+"/LoginController");
 			return;
 		}
-		
 		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+		this.reDao = new RecommentService();
+		ArrayList<Recomment> list = reDao.getRecommentbyBoard(boardNo);
+		
 		this.boardService = new BoardService();
 		Board b = boardService.boardOne(boardNo);
 		
@@ -42,8 +48,11 @@ public class BoardOneController extends HttpServlet {
 		}
 		request.setAttribute("board", b);
 		request.setAttribute("result", result);
-		
+		request.setAttribute("list", list);
 		request.getRequestDispatcher("/WEB-INF/view/board/boardOne.jsp").forward(request, response);
+		
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 	}
 

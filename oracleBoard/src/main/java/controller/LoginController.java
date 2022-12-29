@@ -27,6 +27,12 @@ public class LoginController extends HttpServlet {
 			response.sendRedirect(request.getContextPath()+"/HomeController");
 			return;
 		}
+		int msg = 0;
+		if(request.getParameter("msg") != null) {
+			msg = Integer.parseInt(request.getParameter("msg"));
+		}
+		request.setAttribute("msg", msg);
+		
 		request.getRequestDispatcher("/WEB-INF/view/member/login.jsp").forward(request, response);
 	}
 
@@ -36,7 +42,7 @@ public class LoginController extends HttpServlet {
 		String memberId= request.getParameter("memberId");
 		String memberPw= request.getParameter("memberPw");
 		Member m = new Member();
-		
+		int msg=0;
 		m.setMemberId(memberId);
 		m.setMemberPw(memberPw);
 		this.memberService= new MemberService();
@@ -46,7 +52,9 @@ public class LoginController extends HttpServlet {
 			request.getSession().setAttribute("loginMember", resultm);
 			response.sendRedirect(request.getContextPath()+"/HomeController");
 		}else {
-			response.sendRedirect(request.getContextPath()+"/LoginController");
+			msg=1;
+			
+			response.sendRedirect(request.getContextPath()+"/LoginController?msg="+msg);
 		}
 		
 		

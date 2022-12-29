@@ -27,15 +27,23 @@ public class ModifiyBoardController extends HttpServlet {
 			response.sendRedirect(request.getContextPath()+"/LoginController");
 			return;
 		}
-		request.getRequestDispatcher("/WEB-INF/view/member/updateBoard.jsp").forward(request, response);
+		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+		this.boardService=new BoardService();
+		Board board = boardService.boardOne(boardNo);
+		
+		request.setAttribute("b", board);
+		
+		request.getRequestDispatcher("/WEB-INF/view/board/updateBoard.jsp").forward(request, response);
 	}
 
 	//action
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 		String boardTitle=request.getParameter("boardTitle");
 		String boardContent=request.getParameter("boardContent");
 		Board b = new Board();
+		b.setBoardNo(boardNo);
 		b.setBoardContent(boardContent);
 		b.setBoardTitle(boardTitle);
 		
