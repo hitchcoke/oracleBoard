@@ -40,11 +40,14 @@ public class BoardListController extends HttpServlet {
 		if(request.getParameter("searchtitle") != null) {
 			searchtitle = request.getParameter("searchtitle");
 		}
+		String type= "board_title";
+		if(request.getParameter("type")!=null) {
+			type= request.getParameter("type");
+		}
 		
-
 		this.boardService = new BoardService();
-		int lastPage=boardService.countBoard(rowPerPage, searchtitle);
-		ArrayList<Board> list = boardService.getBoardListByPage(currentPage, rowPerPage, searchtitle);
+		int lastPage=boardService.countBoard(rowPerPage, searchtitle, type);
+		ArrayList<Board> list = boardService.getBoardListByPage(currentPage, rowPerPage, searchtitle, type);
 		request.setAttribute("list", list);
 		request.setAttribute("currentPage", currentPage); // view에서 필요
 		request.setAttribute("rowPerPage", rowPerPage); // view에서 필요

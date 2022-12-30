@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
@@ -45,11 +45,24 @@
 	                  <input type="password" class="form-control" name="memberPw" id="subject" placeholder="password ">
 	                </div>
               	</div>
-
-   			 <br>
+				<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h1 class="modal-title fs-5" id="staticBackdropLabel">정말 탈퇴하시겠습니까?</h1>
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">다시 생각하기</button>
+					        <button type="submit" class="btn btn-primary">네 충분히 확인했습니다</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+	   			 <br>
               <div class="row justify-content-center">
                 <div class="col-md-5 form-group text-center">
-                  <button type="submit" class="btn btn-block btn-primary rounded-0 py-2 px-4">탈퇴하기</button>
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-block btn-primary rounded-0 py-2 px-4">탈퇴하기</button>
                 
                 </div>
               </div>
@@ -59,7 +72,13 @@
       </div>
     </div>
 
+
   </div>
+  <c:if test="${msg==1}">
+  	<script>
+  		alert("비밀번호를 확인해주세요")
+  	</script>
+  </c:if>
   
 
     <script src="${pageContext.request.contextPath}/bootstrap/insert/js/jquery-3.3.1.min.js"></script>

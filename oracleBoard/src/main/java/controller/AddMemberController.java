@@ -29,7 +29,11 @@ public class AddMemberController extends HttpServlet {
 			response.sendRedirect(request.getContextPath()+"/HomeController");
 			return;
 		}
-		
+		int msg=0;
+		if(request.getParameter("msg")!=null) {
+			msg= Integer.parseInt(request.getParameter("msg"));
+		}
+		request.setAttribute("msg", msg);
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/view/member/insertMember.jsp");
 		rd.forward(request, response);
 	}
@@ -63,7 +67,8 @@ public class AddMemberController extends HttpServlet {
 			response.sendRedirect(request.getContextPath()+"/LoginController");
 			
 		}else {
-			response.sendRedirect(request.getContextPath()+"/AddMemberController");
+			int msg= 1;
+			response.sendRedirect(request.getContextPath()+"/AddMemberController?msg="+msg);
 		}
 		
 		

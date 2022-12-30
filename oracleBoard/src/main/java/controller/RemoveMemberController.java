@@ -30,10 +30,12 @@ public class RemoveMemberController extends HttpServlet {
 			return;
 		}
 		
-		if(request.getParameter("msg")!=null) {
-			String msg= "아이디비밀번호를 확인하세요";
-			request.setAttribute("mg", msg);
+		int msg = 0;
+		if(request.getParameter("msg") != null) {
+			msg = Integer.parseInt(request.getParameter("msg"));
 		}
+		request.setAttribute("msg", msg);
+		
 		request.getRequestDispatcher("/WEB-INF/view/member/deleteMember.jsp").forward(request, response);
 		//view
 	}
@@ -55,6 +57,7 @@ public class RemoveMemberController extends HttpServlet {
 		int result= memberService.deleteMember(m);
 		
 		if(result == 1) {
+			
 			memberService.deleteMember(m);
 			boardService.deleteMemberBoardToo(m.getMemberId());
 			response.sendRedirect(request.getContextPath()+"/LogoutController");

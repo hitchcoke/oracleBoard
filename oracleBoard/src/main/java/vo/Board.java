@@ -9,7 +9,16 @@ public class Board {
 	private String memberId;
 	private String updatedate;
 	private String createdate;
+	private int boardView;
 	
+	
+	
+	public int getBoardView() {
+		return boardView;
+	}
+	public void setBoardView(int boardView) {
+		this.boardView = boardView;
+	}
 	public int getBoardNo() {
 		return boardNo;
 	}

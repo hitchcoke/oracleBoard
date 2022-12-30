@@ -9,9 +9,9 @@ import vo.Board;
 
 public class BoardDao {
 	// 검색 추가
-	public ArrayList<Board> selectBoardListByPage(Connection conn, int beginRow, int endRow, String serachtitle) throws Exception {
+	public ArrayList<Board> selectBoardListByPage(Connection conn, int beginRow, int endRow, String serachtitle, String type) throws Exception {
 		ArrayList<Board> list = new ArrayList<Board>();
-		String sql = "SELECT board_no boardNo, board_title boardTitle, createdate FROM (SELECT rownum rnum, board_no, board_title, createdate FROM (SELECT board_no, board_title, createdate FROM board WHERE board_title LIKE ? ORDER BY TO_NUMBER(board_no) DESC)) WHERE rnum BETWEEN ? AND ?"; // WHERE rnum >=? AND rnum <=?;
+		String sql = "SELECT board_no boardNo, board_title boardTitle, board_view, member_id, createdate FROM (SELECT rownum rnum, board_view, board_no, board_title, member_id, createdate FROM (SELECT board_no, board_view, member_id, board_title, createdate FROM board WHERE "+type+" LIKE ? ORDER BY TO_NUMBER(board_no) DESC)) WHERE rnum BETWEEN ? AND ?"; // WHERE rnum >=? AND rnum <=?;
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setString(1, "%"+serachtitle+"%");
 		stmt.setInt(2, beginRow);
@@ -23,13 +23,28 @@ public class BoardDao {
 			b.setBoardNo(rs.getInt("boardNo"));
 			b.setBoardTitle(rs.getString("boardTitle"));
 			b.setCreatedate(rs.getString("createdate"));
-			
+			b.setBoardView(rs.getInt("board_view"));
+			b.setMemberId(rs.getString("member_id"));
 			list.add(b);
 		}
 		rs.close();
 		stmt.close();
 		return list;
 	}
+	//조회수 
+	public int insertBoardView(Connection conn, int boardNo, int view) throws Exception{
+		int result= 0;
+		String sql ="UPDATE BOARD SET board_view = ?  WHERE board_no= ?";
+		PreparedStatement stmt= conn.prepareStatement(sql);
+		stmt.setInt(1, view+1);
+		stmt.setInt(2, boardNo);
+		result= stmt.executeUpdate();
+		
+		stmt.close();
+		
+		return result;
+	}
+	
 	
 	public int insertBoard(Connection conn, Board b) throws Exception {
 		int result= 0;
@@ -51,6 +66,7 @@ public class BoardDao {
 		ResultSet rs = stmt.executeQuery();
 		
 		if(rs.next()) {
+			board.setBoardView(rs.getInt("board_view"));
 			board.setBoardNo(rs.getInt("board_no"));
 			board.setBoardTitle(rs.getString("board_title"));
 			board.setBoardContent(rs.getString("board_content"));
@@ -101,10 +117,10 @@ public class BoardDao {
 		
 		return result;
 	}
-	public int countBoard(Connection conn, int rowPerPage, String serachtitle) throws Exception{
+	public int countBoard(Connection conn, int rowPerPage, String serachtitle, String type) throws Exception{
 		
 		int count=0;
-		String sql = "SELECT COUNT(*) FROM board WHERE WHERE board_title LIKE ?";
+		String sql = "SELECT COUNT(*) FROM board WHERE "+type+" LIKE ?";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setString(1, "%"+serachtitle+"%");
 		

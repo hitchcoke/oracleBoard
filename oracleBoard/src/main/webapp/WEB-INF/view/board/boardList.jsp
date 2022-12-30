@@ -31,12 +31,16 @@
 				<th width=15%>boardNo</th>
 				<th>boardTitle</th>
 				<th width=20%>createdate</th>
+				<th width=10%>memberID</th>
+				<th width=5%>view</th>
 			</tr>
 		<c:forEach var="b" items="${list}">
 			<tr>
 				<td>${b.boardNo}</td>
 				<td><a href="${pageContext.request.contextPath}/BoardOneController?boardNo=${b.boardNo}">${b.boardTitle}</a></td>
 				<td>${b.createdate}</td>
+				<td>${b.memberId}</td>
+				<td>${b.boardView}</td>
 			</tr>
 		</c:forEach>
 		</table>
@@ -49,14 +53,14 @@
 	   			</c:if>				
 	   			<c:if test="${currentPage <= 1 }">
 	   				<li class="page-item disabled"></c:if>	
-	      				<a class="page-link" href="${pageContext.request.contextPath}/BoardListController?rowPerPage=${rowPerPage}&currentPage=${currentPage-1}">Previous</a>
+	      				<a class="page-link" href="${pageContext.request.contextPath}/BoardListController?rowPerPage=${rowPerPage}&currentPage=${currentPage-1}&type=${type}">Previous</a>
 	    			</li>
 
-	    		<c:if test="${currentPage <= lastPage}">
+	    		<c:if test="${currentPage < lastPage}">
 	    			<li class="page-item"></c:if>
-	    		<c:if test="${currentPage > lastPage}">
+	    		<c:if test="${currentPage >= lastPage}">
 	    			<li class="page-item disabled"></c:if>
-	      		   		<a class="page-link" href="${pageContext.request.contextPath}/BoardListController?rowPerPage=${rowPerPage}&currentPage=${currentPage+1}">Next</a>
+	      		   		<a class="page-link" href="${pageContext.request.contextPath}/BoardListController?rowPerPage=${rowPerPage}&currentPage=${currentPage+1}&type=${type}">Next</a>
 	    			</li>				
  	   		</ul>
 	   </nav></div>
@@ -82,6 +86,13 @@
 							<option value="20">20</option>
 							<option value="30" selected="selected">30개씩</option>
 						</c:if>
+					</select>
+					<select name="type" id="type">
+					
+							<option value="board_title" selected="selected">제목</option>
+							<option value="board_content">내용</option>
+							<option value="member_id">작성자</option>
+						
 					</select>
 					<input type="text" name="searchtitle" value="${searchtitle}">
 					<button type="submit" class="btn btn-outline-primary">검색</button>

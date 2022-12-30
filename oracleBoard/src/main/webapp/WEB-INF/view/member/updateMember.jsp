@@ -12,6 +12,7 @@
 <!-- Latest compiled JavaScript -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
 	   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap/insert/fonts/icomoon/style.css">
@@ -37,7 +38,7 @@
           <div class="form h-100 contact-wrap p-5">
             <h3 class="text-center">이름 수정 </h3><br>
             <div> ${loginMember.memberName}님 이름 수정 </div><br>
-            <form class="mb-5" method="post" action="${pageContext.request.contextPath}/ModifyMemberController">
+            <form class="mb-5" method="post" action="${pageContext.request.contextPath}/ModifyMemberController" id="form">
             	
                 <div class="row">
 	                <div class="col-md-12 form-group mb-3">
@@ -49,7 +50,7 @@
    			 <br>
               <div class="row justify-content-center">
                 <div class="col-md-5 form-group text-center">
-                  <button type="submit" class="btn btn-block btn-primary rounded-0 py-2 px-4">수정하기</button>
+                  <button type="button" id="btn" class="btn btn-block btn-primary rounded-0 py-2 px-4">수정하기</button>
                 
                 </div>
               </div>
@@ -60,6 +61,17 @@
     </div>
 
   </div>
+  <script>
+  	$('#btn').click(function(){
+  		if($('#subject').val().length<1){
+  			alert("바꿀 이름을 적어주세요");
+  			return;
+  		}
+  		
+  		$('#form').submit();
+  		
+  	})
+  </script>
   
 
     <script src="${pageContext.request.contextPath}/bootstrap/insert/js/jquery-3.3.1.min.js"></script>

@@ -36,10 +36,14 @@ public class BoardOneController extends HttpServlet {
 		}
 		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 		this.reDao = new RecommentService();
+		
 		ArrayList<Recomment> list = reDao.getRecommentbyBoard(boardNo);
 		
 		this.boardService = new BoardService();
 		Board b = boardService.boardOne(boardNo);
+		int view = b.getBoardView();
+		
+		boardService.updateView(boardNo, view);
 		
 		int result = 0;
 		
